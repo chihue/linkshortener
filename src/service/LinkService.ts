@@ -1,11 +1,13 @@
 "use server";
 
 import { getCollection } from "@/repository/MongoConfig";
-import { ValidatorResponse, iLink } from "@/types";
+import { ValidatorResponse, iLink, iLinkAccess } from "@/types";
 import { generateTime } from "@/utils/Generators";
 import { urlValidator } from "@/utils/Validators";
 import { ObjectId } from "mongodb";
 import { nanoid } from "nanoid";
+import { NextRequest } from "next/server";
+import { getDeviceInfo, getGeoInfo } from "@/service/DeviceInfo";
 
 export async function createLinkForm(
     previousState: any,
@@ -56,4 +58,37 @@ export async function createLinkForm(
             message: 'Error creating link',
         };
     }
+}
+
+export async function saveLinkAccess({ link_id, req }: { link_id: ObjectId, req: NextRequest }) {
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('remote-addr') || req.headers.get('x-real-ip') || req.ip || '';
+    const user_agent = req.headers.get('user-agent') || '';
+
+    const geoInfo = await getGeoInfo(ip);
+    const deviceInfo = await getDeviceInfo(user_agent);
+
+    const link_access: iLinkAccess = {
+        _id: new ObjectId(),
+        link_id,
+        time: generateTime(),
+        ip,
+        refer_url: req.headers.get('referer') || '',
+        user_agent,
+        device: deviceInfo.device,
+        os: deviceInfo.os,
+        browser: deviceInfo.browser,
+        platform: deviceInfo.platform,
+        country: geoInfo.country,
+        region: geoInfo.region,
+        city: geoInfo.city,
+        timezone: geoInfo.timezone,
+        isp: geoInfo.isp,
+        org: geoInfo.org,
+        cpu: deviceInfo.cpu,
+    };
+
+    const collectionLinksAccess = await getCollection('links_access');
+    const inserted_result = await collectionLinksAccess.insertOne(link_access);
+
+    return inserted_result.insertedId;
 }

@@ -1,4 +1,5 @@
 import FormNewLink from "@/components/FormNewLink";
+import MyLinks from "@/components/MyLinks";
 
 export default function Home() {
   return (
@@ -17,6 +18,9 @@ export default function Home() {
             <FormNewLink />
           </div>
         </div>
+      </div>
+      <div className="flex justify-center mt-10">
+        <MyLinks />
       </div>
     </section>
   );

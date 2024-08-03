@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
         ok: true,
         message: 'Im live',
-        mongo,
+        db: mongo,
     });
 }
 
