@@ -29,7 +29,7 @@ function MyLinks() {
     if (isLoading) return <div>Loading...</div>
 
     if (links.length === 0) {
-        return <div>You don't have any links yet, create your own</div>
+        return <div>You don&apos;t have any links yet, create your own</div>
     }
 
     return (
