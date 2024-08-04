@@ -61,7 +61,9 @@ export async function createLinkForm(
 }
 
 export async function saveLinkAccess({ link_id, req }: { link_id: ObjectId, req: NextRequest }) {
-    const ip = req.headers.get('x-forwarded-for') || req.headers.get('remote-addr') || req.headers.get('x-real-ip') || req.ip || '';
+    let ip = req.headers.get('x-forwarded-for') || req.headers.get('remote-addr') || req.headers.get('x-real-ip') || req.ip || '';
+    if (ip.includes(',')) ip = ip.split(',')[0];
+
     const user_agent = req.headers.get('user-agent') || '';
 
     const geoInfo = await getGeoInfo(ip);
