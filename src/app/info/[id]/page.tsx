@@ -6,6 +6,8 @@ import TableInfo from './TableInfo';
 import TableStats from './TableStats';
 import AddLocalStorage from '@/service/LocalStorageService/AddLocalStorage';
 import { LinkLS } from '@/types/static';
+import { Suspense } from 'react';
+import LoadingComponent from '@/components/LoadingComponent';
 
 async function LinkInfo({
     params: {
@@ -36,8 +38,16 @@ async function LinkInfo({
             <div>
                 <TableInfo linkObject={linkObject} />
             </div>
-            <div>
-                <TableStats id={linkObject._id} />
+            <div className='mt-5'>
+                <h3 className='text-4xl p-2'>Stats</h3>
+                <Suspense fallback={
+                    <LoadingComponent
+                        text="Loading stats...."
+                        className="flex flex-col items-center justify-center bg-background"
+                    />
+                }>
+                    <TableStats id={linkObject._id} />
+                </Suspense>
             </div>
         </div>
     )
