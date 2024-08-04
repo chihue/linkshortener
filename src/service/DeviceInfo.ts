@@ -19,8 +19,11 @@ interface DeviceInfo {
 }
 
 export async function getGeoInfo(ip: string): Promise<GeoInfo> {
-    const response = await fetch(`https://ipinfo.io/${ip}?token=${process.env.IPINFO_TOKEN}`);
+    const url = `https://ipinfo.io/${ip}?token=${process.env.IPINFO_TOKEN}`;
+    console.log(url);
+    const response = await fetch(url);
     const data = await response.json();
+    console.log(data);
     return {
         country: data.country || '',
         region: data.region || '',
