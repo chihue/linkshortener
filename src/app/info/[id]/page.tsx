@@ -12,7 +12,7 @@ import LoadingComponent from '@/components/LoadingComponent';
 async function LinkInfo({
     params: {
         id
-    }
+    },
 }: { params: { id: string } }) {
     let linkObject: iLink | null = null;
 
